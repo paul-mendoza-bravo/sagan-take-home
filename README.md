@@ -4,6 +4,10 @@ A minimal working demo of the financial reporting portal described in the PRD: s
 
 Built under a 2-hour cap. See [SCOPE.md](SCOPE.md) for the explicit scope decisions, what was deliberately left out, and gaps noticed in the PRD.
 
+## Deployment status
+
+A `Dockerfile` and `railway.toml` are included and configured for Railway deployment (PRD's recommended host). **At submission time, Railway was experiencing a major outage** ([status](https://status.railway.com)) — their Google Cloud account was blocked and non-enterprise deploys were paused. The deploy was triggered but stuck mid-build. The repo runs locally with one command (below); a live URL would be live without the outage.
+
 ## Stack
 
 - **FastAPI** + Jinja2 templates (single HTML form)
