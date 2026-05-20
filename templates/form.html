@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SACS Report — {{ client.name }}</title>
+  <style>
+    :root {
+      --primary: #1e3a5f;
+      --primary-light: #2d5a8a;
+      --border: #d1d9e0;
+      --bg: #f5f7fa;
+      --text: #1a202c;
+      --muted: #5a6c7d;
+      --accent: #2d8a4a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 2.5rem 1rem;
+      line-height: 1.5;
+    }
+    .container { max-width: 760px; margin: 0 auto; }
+    .header {
+      border-left: 4px solid var(--primary);
+      padding-left: 1rem;
+      margin-bottom: 2rem;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--primary);
+      letter-spacing: -0.3px;
+    }
+    .header .subtitle {
+      margin: 0.25rem 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+    .card h2 {
+      margin: 0 0 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .row { display: flex; gap: 1rem; }
+    .row > .field { flex: 1; }
+    .field { margin-bottom: 0.75rem; }
+    .field:last-child { margin-bottom: 0; }
+    label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.55rem 0.7rem;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: var(--text);
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(45, 90, 138, 0.12);
+    }
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 1.5rem;
+    }
+    button[type="submit"] {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.75rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      font-family: inherit;
+      border-radius: 5px;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      transition: background 0.15s;
+    }
+    button[type="submit"]:hover { background: var(--primary-light); }
+    button[type="submit"]:active { transform: translateY(1px); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Quarterly Financial Report</h1>
+      <p class="subtitle">Client: {{ client.name }}</p>
+    </div>
+
+    <form action="/generate" method="post">
+      <div class="card">
+        <h2>Cash Flow</h2>
+        <div class="field">
+          <label for="inflow">Inflow ($)</label>
+          <input id="inflow" type="number" name="inflow" step="0.01" required />
+        </div>
+        <div class="field">
+          <label for="outflow">Outflow ($)</label>
+          <input id="outflow" type="number" name="outflow" step="0.01" required />
+        </div>
+        <div class="field">
+          <label for="private_reserve">Private Reserve — current ($)</label>
+          <input id="private_reserve" type="number" name="private_reserve" step="0.01" required />
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Retirement Accounts</h2>
+        <div class="row">
+          <div class="field">
+            <label>Roth IRA — Owner</label>
+            <select name="roth_ira_owner" required>
+              <option value="{{ client.spouse_1 }}">{{ client.spouse_1 }}</option>
+              <option value="{{ client.spouse_2 }}">{{ client.spouse_2 }}</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Roth IRA — Balance ($)</label>
+            <input type="number" name="roth_ira_balance" step="0.01" required />
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label>401K — Owner</label>
+            <select name="k401_owner" required>
+              <option value="{{ client.spouse_2 }}">{{ client.spouse_2 }}</option>
+              <option value="{{ client.spouse_1 }}">{{ client.spouse_1 }}</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>401K — Balance ($)</label>
+            <input type="number" name="k401_balance" step="0.01" required />
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Non-Retirement Accounts</h2>
+        <div class="field">
+          <label>Brokerage — Balance ($)</label>
+          <input type="number" name="brokerage_balance" step="0.01" required />
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Trust</h2>
+        <div class="field">
+          <label>Home — Zillow Value ($)</label>
+          <input type="number" name="trust_zillow_value" step="0.01" required />
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Liabilities</h2>
+        <div class="row">
+          <div class="field">
+            <label>Mortgage — Balance ($)</label>
+            <input type="number" name="mortgage_balance" step="0.01" required />
+          </div>
+          <div class="field">
+            <label>Mortgage — Interest Rate (%)</label>
+            <input type="number" name="mortgage_rate" step="0.01" required />
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="submit">Generar Reporte</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>
