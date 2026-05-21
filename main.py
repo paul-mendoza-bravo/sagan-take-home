@@ -9,7 +9,6 @@ if sys.platform == "win32":
 
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse, Response
-from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from playwright.async_api import async_playwright
 
@@ -17,7 +16,6 @@ BASE_DIR = Path(__file__).resolve().parent
 
 app = FastAPI(title="Sagan SACS Demo")
 
-app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
 
 CLIENT = {
